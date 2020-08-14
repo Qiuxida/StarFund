@@ -3,6 +3,8 @@
 	"displayName": "StarFund",
 	"description": "查看基金的插件",
 	"version": "0.0.1",
+	"publisher": "qiuxd",
+	"readme": "README.md",
 	"engines": {
 		"vscode": "^1.47.0"
 	},
