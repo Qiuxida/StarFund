@@ -1,0 +1,113 @@
+{
+	"name": "star-fund",
+	"displayName": "StarFund",
+	"description": "查看基金的插件",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.47.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "starFund.add",
+				"title": "添加基金",
+				"icon": {
+					"light": "/image/light/add.svg",
+					"dark": "/image/dark/add.svg"
+				}
+			},
+			{
+				"command": "starFund.refresh",
+				"title": "刷新",
+				"icon": {
+					"light": "/image/light/refresh.svg",
+					"dark": "/image/dark/refresh.svg"
+				}
+			},
+			{
+				"command": "starFund.open",
+				"title": "打开基金详情"
+			},
+			{
+				"command": "starFund.delete",
+				"title": "删除基金"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "fund",
+					"title": "基金",
+					"icon": "/image/fund.svg"
+				}
+			]
+		},
+		"views": {
+			"fund": [
+				{
+					"id": "my-fund",
+					"title": "我的基金",
+					"name": "我的基金"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "starFund.add",
+					"group": "navigation",
+					"when": "view == my-fund"
+				},
+				{
+					"command": "starFund.refresh",
+					"group": "navigation",
+					"when": "view == my-fund"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "starFund.delete",
+					"group": "navigation",
+					"when": "view == my-fund"
+				}
+			]
+		},
+		"configuration": {
+			"properties": {
+				"starFund": {
+					"type": "array",
+					"default": [
+						"320007",
+						"000960"
+					]
+				}
+			}
+		}
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "node ./test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.47.0",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^13.11.0",
+		"eslint": "^6.8.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.1.2",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.3.0"
+	},
+	"dependencies": {
+		"axios": "0.19.2"
+	}
+}
