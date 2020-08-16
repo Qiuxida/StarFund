@@ -14,14 +14,13 @@ function registerEvent(context){
             let t = item.split("|");
             fundSuggestList.push({
                 alwaysShow: true,
-                description: t[0],
+                description: t[3],
                 detail: "",
-                label: t[2]+" "+t[3],
+                label: t[2]+"("+t[0]+")",
                 picked: true,
                 code: t[0]
             })
         });
-        // fundSuggestList =JSON.parse(data);
     })
     context.subscriptions.push(
         vscode.commands.registerCommand('starFund.add',() => {
