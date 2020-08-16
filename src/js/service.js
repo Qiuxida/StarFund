@@ -39,8 +39,22 @@ function getFundHistory(code) {
     })
 }
 
+function getFundSuggestList(){
+    return new Promise((resolve, reject) => {
+        axios
+            .default
+            .get(`http://m.1234567.com.cn/data/FundSuggestList.js`)
+            .then(resp => {
+                resolve(resp.data);
+            }).catch(error => {
+                reject(error);
+            })
+    })
+}
+
 module.exports = {
     getFundByCode,
     getIndexByCode,
-    getFundHistory
+    getFundHistory,
+    getFundSuggestList
 }

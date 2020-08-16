@@ -2,15 +2,43 @@ const vscode = require('vscode');
 const config = require('./config');
 const manager = require('./manager');
 const { CustomTreeViewProvider } = require('./customTreeViewProvider');
+const service = require('./service');
 
 function registerEvent(context){
     let provider = new CustomTreeViewProvider();
-
+    let fundSuggestList = [];
+    service.getFundSuggestList().then(data => {
+        data = data.slice(data.indexOf("["),data.indexOf("]")+1);
+        let temp = JSON.parse(data);
+        temp.forEach(item => {
+            let t = item.split("|");
+            fundSuggestList.push({
+                alwaysShow: true,
+                description: t[0],
+                detail: "",
+                label: t[2]+" "+t[3],
+                picked: true,
+                code: t[0]
+            })
+        });
+        // fundSuggestList =JSON.parse(data);
+    })
     context.subscriptions.push(
         vscode.commands.registerCommand('starFund.add',() => {
-            vscode.window.showInputBox({prompt: '请输入基金代码'}).then(code => {
-                config.updateFundCodes("starFund",code);
-                provider.refresh();
+            vscode.window.showQuickPick(
+                fundSuggestList,
+                {
+                    canPickMany:false,
+                    ignoreFocusOut:false,
+                    matchOnDescription:true,
+                    matchOnDetail:true,
+                    placeHolder:'请选择基金'
+                }
+            ).then(item => {
+                if (item){
+                    config.updateFundCodes("starFund",item.code);
+                    provider.refresh();
+                }
             })
         })
     )
