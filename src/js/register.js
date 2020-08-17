@@ -59,14 +59,17 @@ function registerEvent(context){
                     "fundDetail",
                     name,
                     vscode.ViewColumn.One,
-                    {}
+                    {
+                        enableScripts: true
+                    }
                 );
                 panel.webview.html = getWebviewContent(data);
             });
         })
     )
 
-    manager.initIndexStatus();
+    let statusItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    manager.initIndexStatus(statusItem);
     
     vscode.window.registerTreeDataProvider("my-fund",provider);
 
@@ -74,7 +77,7 @@ function registerEvent(context){
         let hour = new Date().getHours();
         if (hour>9 && hour<15){
             provider.refresh();
-            manager.initIndexStatus();
+            manager.initIndexStatus(statusItem);
         }
 	},10000)
 }
@@ -85,7 +88,7 @@ function getWebviewContent(data) {
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Cat Coding</title>
+                <title>历史净值明细</title>
             </head>
             <style>
                 .grn{

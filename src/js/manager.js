@@ -1,11 +1,14 @@
 const service = require('./service');
-const vscode = require('vscode');
 
-async function initIndexStatus(){
+async function initIndexStatus(statusItem){
     let data = await service.getIndexByCode("sh000001");
     data = data.split('\"')[1];
     data = data.split(',');
-    vscode.window.setStatusBarMessage("上证指数 开盘价"+data[2]+" 收盘价"+data[1]);
+    statusItem.tooltip = "上证指数:"+data[3]+"\n"+
+                        "今收："+data[1]+" 昨收："+data[2]+"\n"+
+                        "最高："+data[4]+" 最低："+data[5];
+    statusItem.text = "上证指数:"+data[3];
+    statusItem.show();
 }
 
 async function getFundHistory(code){
