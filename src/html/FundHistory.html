@@ -40,12 +40,28 @@
     div{
         margin: 10px 0;
     }
+    .profit td{
+        width: 200px;
+        text-align: left;
+    }
 </style>
 
 <body>
-    <h1>历史净值明细</h1>
+    <h2>收益</h2>
+    <table class="profit">
+        <tr>
+            <td>近1月：${syl_1y}</td>
+            <td>近3月：${syl_3y}</td>
+        </tr>
+        <tr>
+            <td>近6月：${syl_6y}</td>
+            <td>近1年：${syl_1n}</td>
+        </tr>
+    </table>
+    <h2>历史净值明细</h2>
     <span>${content}</span>
     <div id="main" style="width: 800px;height:400px;"></div>
+    <div id="main2" style="width: 800px;height:400px;"></div>
 </body>
 <script>
     let myChart = echarts.init(document.getElementById('main'));
@@ -53,7 +69,7 @@
     let perData = ${perData};
     let xData = data.map(item => {
         let date = new Date(item[0])
-        return date.getFullYear()+"/"+date.getMonth()+"/"+date.getDate();
+        return date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate();
     });
     let yData = data.map(item => item[1]);
     let yyData = perData.map(item => item.y);
@@ -75,16 +91,24 @@
             data: xData
         },
         yAxis: {},
+        dataZoom: [{
+            type: 'inside'
+        },{
+            show: true,
+            realtime: true
+        }], 
         series: [
             {
                 name: '累积净值走势',
                 type: 'line',
-                data: yData
+                data: yData,
+                areaStyle: {},
             },
             {
                 name: '单位净值走势',
                 type: 'line',
-                data: yyData
+                data: yyData,
+                areaStyle: {},
             }
         ]
     };

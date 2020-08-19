@@ -100,7 +100,11 @@ function getWebviewContent(data,context) {
     })
     .replace("${content}",data[0].content)
     .replace("${data}",JSON.stringify(data[1].ac))
-    .replace("${perData}",JSON.stringify(data[1].net));
+    .replace("${perData}",JSON.stringify(data[1].net))
+    .replace("${syl_1n}",data[1].syl_1n+"%")
+    .replace("${syl_6y}",data[1].syl_6y+"%")
+    .replace("${syl_3y}",data[1].syl_3y+"%")
+    .replace("${syl_1y}",data[1].syl_1y+"%");
     return html;
 }
 

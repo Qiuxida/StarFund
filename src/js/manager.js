@@ -22,7 +22,14 @@ async function getACWorthTrend(code){
     let data = await service.getAllFundInfo(code);
     eval(data);
     // @ts-ignore
-    let d = {ac: Data_ACWorthTrend, net: Data_netWorthTrend};
+    let d = {
+        ac: Data_ACWorthTrend, 
+        net: Data_netWorthTrend, 
+        syl_1n: syl_1n,
+        syl_6y: syl_6y,
+        syl_3y: syl_3y,
+        syl_1y: syl_1y
+    };
     return Promise.resolve(d);
 }
 
