@@ -52,9 +52,23 @@ function getFundSuggestList(){
     })
 }
 
+function getAllFundInfo(code){
+    return new Promise((resolve, reject) => {
+        axios
+            .default
+            .get(`http://fund.eastmoney.com/pingzhongdata/${code}.js`)
+            .then(resp => {
+                resolve(resp.data);
+            }).catch(error => {
+                reject(error);
+            })
+    })
+}
+
 module.exports = {
     getFundByCode,
     getIndexByCode,
     getFundHistory,
-    getFundSuggestList
+    getFundSuggestList,
+    getAllFundInfo
 }

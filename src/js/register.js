@@ -1,8 +1,10 @@
 const vscode = require('vscode');
 const config = require('./config');
 const manager = require('./manager');
-const { CustomTreeViewProvider } = require('./customTreeViewProvider');
 const service = require('./service');
+const path = require('path');
+const fs = require('fs');
+const { CustomTreeViewProvider } = require('./customTreeViewProvider');
 
 function registerEvent(context){
     let provider = new CustomTreeViewProvider();
@@ -54,16 +56,23 @@ function registerEvent(context){
     )
     context.subscriptions.push(
         vscode.commands.registerCommand('starFund.open', (code,name) => {
-            manager.getFundHistory(code).then(data => {
+            let promiseAll = [];
+            promiseAll.push(manager.getFundHistory(code));
+            promiseAll.push(manager.getACWorthTrend(code));
+            // @ts-ignore
+            Promise.all(promiseAll).then(data => {
                 let panel = vscode.window.createWebviewPanel(
                     "fundDetail",
                     name,
                     vscode.ViewColumn.One,
                     {
-                        enableScripts: true
+                        enableScripts: true,
+                        localResourceRoots: [
+                            vscode.Uri.file(path.join(context.extensionPath, 'node_modules'))
+                        ]
                     }
                 );
-                panel.webview.html = getWebviewContent(data);
+                panel.webview.html = getWebviewContent(data,context);
             });
         })
     )
@@ -82,42 +91,17 @@ function registerEvent(context){
 	},10000)
 }
 
-function getWebviewContent(data) {
-    return `<!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>历史净值明细</title>
-            </head>
-            <style>
-                .grn{
-                    color: green;
-                }
-                .red{
-                    color: red;
-                }
-                .bold{
-                    font-weight: 700;
-                }
-                .unbold{
-                    font-weight: 400;
-                }
-                .tor{
-                    text-align: right;
-                    padding-right: 10px;
-                }
-                td {
-                    height: 16px;
-                    line-height: 16px;
-                    vertical-align: middle;
-                }
-            </style>
-            <body>
-                <h1>历史净值明细</h1>
-                <span>${data.content}</span>
-            </body>
-        </html>`;
-  }
+function getWebviewContent(data,context) {
+    let resourcePath = path.join(context.extensionPath,"src","html","FundHistory.html");
+    let dirPath = path.dirname(resourcePath);
+    let html = fs.readFileSync(resourcePath,'utf-8');
+    html = html.replace(/(<link.+?href="|<script.+?src="|<img.+?src=")(.+?)"/g, (m, $1, $2) => {
+        return $1 + vscode.Uri.file(path.resolve(dirPath, $2)).with({ scheme: 'vscode-resource' }).toString() + '"';
+    })
+    .replace("${content}",data[0].content)
+    .replace("${data}",JSON.stringify(data[1].ac))
+    .replace("${perData}",JSON.stringify(data[1].net));
+    return html;
+}
 
 exports.registerEvent = registerEvent;

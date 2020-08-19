@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../../node_modules/echarts/dist/echarts.min.js"></script>
+    <title>历史净值明细</title>
+</head>
+<style>
+    .grn {
+        color: green;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .bold {
+        font-weight: 700;
+    }
+
+    .unbold {
+        font-weight: 400;
+    }
+
+    .tor {
+        padding-right: 10px;
+    }
+    td {
+        height: 16px;
+        line-height: 16px;
+        vertical-align: middle;
+        text-align: center;
+    }
+    th {
+        width: 100px;
+        text-align: center;
+    }
+    div{
+        margin: 10px 0;
+    }
+</style>
+
+<body>
+    <h1>历史净值明细</h1>
+    <span>${content}</span>
+    <div id="main" style="width: 800px;height:400px;"></div>
+</body>
+<script>
+    let myChart = echarts.init(document.getElementById('main'));
+    let data = ${data};
+    let perData = ${perData};
+    let xData = data.map(item => {
+        let date = new Date(item[0])
+        return date.getFullYear()+"/"+date.getMonth()+"/"+date.getDate();
+    });
+    let yData = data.map(item => item[1]);
+    let yyData = perData.map(item => item.y);
+    // 指定图表的配置项和数据
+    let option = {
+        title: {
+            text: '净值走势'
+        },
+        tooltip: {
+            trigger: 'axis',
+            position: function (pt) {
+                return [pt[0], '10%'];
+            }
+        },
+        legend: {
+            data: ['累积净值走势','单位净值走势']
+        },
+        xAxis: {
+            data: xData
+        },
+        yAxis: {},
+        series: [
+            {
+                name: '累积净值走势',
+                type: 'line',
+                data: yData
+            },
+            {
+                name: '单位净值走势',
+                type: 'line',
+                data: yyData
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+
+</html>

@@ -18,7 +18,16 @@ async function getFundHistory(code){
     return Promise.resolve(apidata);
 }
 
+async function getACWorthTrend(code){
+    let data = await service.getAllFundInfo(code);
+    eval(data);
+    // @ts-ignore
+    let d = {ac: Data_ACWorthTrend, net: Data_netWorthTrend};
+    return Promise.resolve(d);
+}
+
 module.exports = {
     initIndexStatus,
-    getFundHistory
+    getFundHistory,
+    getACWorthTrend
 }
