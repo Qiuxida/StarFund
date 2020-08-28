@@ -16,27 +16,32 @@ class CustomTreeViewProvider {
         
     async getChildren() {
         let trees = [];
-        let codes = config.getFundCodes('starFund');
+        let funds = config.getFundCodes('starFund');
         let promiseAll = [];
-        codes.forEach(code => {
-            if (code)
-                promiseAll.push(service.getFundByCode(code));
+        funds.forEach(fund => {
+            if (fund && fund.code)
+                promiseAll.push(service.getFundByCode(fund.code));
         });
         let response = await Promise.all(promiseAll);
-        response.forEach(item => {
+        let total = 0;
+        response.forEach((item,index) => {
             let data = JSON.parse(item.slice(8,-2));
-            let t = this.initTreeItem(data);
-            trees.push(t);
+            let t = this.initTreeItem(data,funds[index]);
+            trees.push(t.item);
+            total += t.profit;
         });
+        vscode.window.setStatusBarMessage("今日收益："+total);
         return trees;
     }
 
-    initTreeItem(data){
-        let gszzl = new Number(data.gszzl)
-        let t = new vscode.TreeItem((gszzl>0?"+":"")+data.gszzl+"% " + data.name);
+    initTreeItem(data,fund){
+        let gszzl = parseFloat(data.gszzl);
+        let dwjz = parseFloat(data.dwjz);
+        let t = new vscode.TreeItem((gszzl>0?"+":"")+data.gszzl+"% " + data.name + "("+data.fundcode+")");
         t.tooltip = "点击查看基金详情";
         t.id = data.fundcode;
-        t.description = data.fundcode;
+        let profit = Math.round(fund.share * gszzl * dwjz)/ 100;
+        t.description = "份额:"+ fund.share.toFixed(2) + " 收益:" + profit;
         t.command = {
             title: data.name,
             command: "starFund.open",
@@ -47,7 +52,7 @@ class CustomTreeViewProvider {
         }else if (gszzl<0){
             t.iconPath = path.join(__filename, '..', '..','..', 'image', 'down.svg')
         }
-        return t;
+        return {item:t,profit: profit};
     }
 
     refresh(){

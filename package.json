@@ -39,6 +39,10 @@
 			{
 				"command": "starFund.delete",
 				"title": "删除基金"
+			},
+			{
+				"command": "starFund.addShare",
+				"title": "添加份额"
 			}
 		],
 		"viewsContainers": {
@@ -74,6 +78,11 @@
 			],
 			"view/item/context": [
 				{
+					"command": "starFund.addShare",
+					"group": "navigation",
+					"when": "view == my-fund"
+				},
+				{
 					"command": "starFund.delete",
 					"group": "navigation",
 					"when": "view == my-fund"
@@ -85,9 +94,15 @@
 				"starFund": {
 					"type": "array",
 					"default": [
-						"320007",
-						"000960"
+						{
+							"code": "320007",
+							"share": 0
+						}
 					]
+				},
+				"total": {
+					"type": "number",
+					"default": 0
 				}
 			}
 		}

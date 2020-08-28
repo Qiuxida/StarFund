@@ -37,8 +37,13 @@ function registerEvent(context){
                 }
             ).then(item => {
                 if (item){
-                    config.updateFundCodes("starFund",item.code);
-                    provider.refresh();
+                    vscode.window.showInputBox({prompt: "输入份额"}).then(num => {
+                        let share = 0;
+                        if (num && !isNaN(share))
+                            share = parseFloat(num);
+                        config.updateFundCodes("starFund",{code:item.code,share:share});
+                        provider.refresh();
+                    })
                 }
             })
         })
@@ -52,6 +57,16 @@ function registerEvent(context){
         vscode.commands.registerCommand('starFund.delete',(target) => {
             config.deleteFundCode("starFund",target.id);
             provider.refresh();
+        })
+    )
+    context.subscriptions.push(
+        vscode.commands.registerCommand('starFund.addShare',(target) => {
+            vscode.window.showInputBox({
+                prompt:'输入份额'
+            }).then(num => {
+                config.updateFundCodes("starFund",{code: target.id,share: parseFloat(num)})
+                provider.refresh();
+            })
         })
     )
     context.subscriptions.push(
