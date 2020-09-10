@@ -43,6 +43,14 @@
 			{
 				"command": "starFund.addShare",
 				"title": "添加份额"
+			},
+			{
+				"command": "starStock.add",
+				"title": "添加",
+				"icon": {
+					"light": "/image/light/add.svg",
+					"dark": "/image/dark/add.svg"
+				}
 			}
 		],
 		"viewsContainers": {
@@ -60,6 +68,11 @@
 					"id": "my-fund",
 					"title": "我的基金",
 					"name": "我的基金"
+				},
+				{
+					"id": "my-stock",
+					"title": "我的股票",
+					"name": "我的股票"
 				}
 			]
 		},
@@ -74,6 +87,11 @@
 					"command": "starFund.refresh",
 					"group": "navigation",
 					"when": "view == my-fund"
+				},
+				{
+					"command": "starStock.add",
+					"group": "navigation",
+					"when": "view == my-stock"
 				}
 			],
 			"view/item/context": [
@@ -96,6 +114,15 @@
 					"default": [
 						{
 							"code": "320007",
+							"share": 0
+						}
+					]
+				},
+				"starStock": {
+					"type": "array",
+					"default": [
+						{
+							"code": "sh000001",
 							"share": 0
 						}
 					]

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { resolve } = require('path');
 
 function getFundByCode(code){
     return new Promise((resolve, reject) => {
@@ -65,10 +66,24 @@ function getAllFundInfo(code){
     })
 }
 
+function getStockSuggestList(code){
+    return new Promise((resolve, reject) => {
+        axios
+            .default
+            .get(`http://suggest3.sinajs.cn/suggest/type=2&key=${code}`)
+            .then(resp => {
+                resolve(resp.data);
+            }).catch(error => {
+                reject(error);
+            })
+    })
+}
+
 module.exports = {
     getFundByCode,
     getIndexByCode,
     getFundHistory,
     getFundSuggestList,
-    getAllFundInfo
+    getAllFundInfo,
+    getStockSuggestList
 }

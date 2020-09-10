@@ -5,6 +5,7 @@ const service = require('./service');
 const path = require('path');
 const fs = require('fs');
 const { CustomTreeViewProvider } = require('./customTreeViewProvider');
+const { QuickPick} = require("./QuickPick");
 
 function registerEvent(context){
     let provider = new CustomTreeViewProvider();
@@ -89,6 +90,12 @@ function registerEvent(context){
                 );
                 panel.webview.html = getWebviewContent(data,context);
             });
+        })
+    )
+    context.subscriptions.push(
+        vscode.commands.registerCommand('starStock.add',(code, name) => {
+            let qp = new QuickPick();
+            qp.show();
         })
     )
 
