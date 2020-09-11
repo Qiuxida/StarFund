@@ -5,7 +5,6 @@ const service = require('./service');
 const path = require('path');
 const fs = require('fs');
 const { CustomTreeViewProvider } = require('./customTreeViewProvider');
-const { QuickPick} = require("./QuickPick");
 
 function registerEvent(context){
     let provider = new CustomTreeViewProvider();
@@ -94,7 +93,27 @@ function registerEvent(context){
     )
     context.subscriptions.push(
         vscode.commands.registerCommand('starStock.add',(code, name) => {
-            let qp = new QuickPick();
+            let qp = vscode.window.createQuickPick();
+            qp.onDidChangeValue(code => {
+                service.getStockSuggestList(code).then(data => {
+                    eval(data);
+                    let items = [];
+                    if(suggestvalue){
+                        let suggests = suggestvalue.split(";");
+                        suggests.forEach(element => {
+                            let numbers = element.split(",");
+                            items.push({
+                                label: numbers[4]
+                            })
+                        });
+                    }
+                    qp.items = items;
+                    console.info(qp.items)
+                });
+            });
+            qp.onDidChangeSelection(selectedItem => {
+                console.info(selectedItem);
+            })
             qp.show();
         })
     )

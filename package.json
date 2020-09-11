@@ -5,7 +5,7 @@
 	"version": "0.0.2",
 	"publisher": "qiuxd",
 	"engines": {
-		"vscode": "^1.47.0"
+		"vscode": "^1.49.0"
 	},
 	"categories": [
 		"Other"

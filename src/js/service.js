@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { resolve } = require('path');
+const iconv = require("iconv-lite");
 
 function getFundByCode(code){
     return new Promise((resolve, reject) => {
@@ -70,7 +70,15 @@ function getStockSuggestList(code){
     return new Promise((resolve, reject) => {
         axios
             .default
-            .get(`http://suggest3.sinajs.cn/suggest/type=2&key=${code}`)
+            .get(`http://suggest3.sinajs.cn/suggest/type=1&key=${code}`,{
+                responseType: 'arraybuffer',
+                transformResponse: [
+                    function (data) {
+                        let body = iconv.decode(data, 'GB18030');
+                        return body;
+                    }
+                ]
+            })
             .then(resp => {
                 resolve(resp.data);
             }).catch(error => {
